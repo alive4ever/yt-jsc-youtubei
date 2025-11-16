@@ -82,7 +82,7 @@ class YoutubeiJCP(JsChallengeProvider):
                     with open(os.path.join(self.js_cachedir, filename), 'w') as file:
                         file.write(content)
                 else:
-                    raise JsChallengeProviderError(f'Unable tocdownload {filename}')
+                    raise JsChallengeProviderError(f'Unable to download {filename}')
 
     def _resolve_js_deps(self, jsx):
         if os.path.isdir(os.path.join(self.js_cachedir, 'node_modules')):
@@ -226,7 +226,7 @@ class YoutubeiJCP(JsChallengeProvider):
                 
                 yield JsChallengeProviderResponse(
                     request=request, 
-                    error=JsChallengeProviderError(f'Command returned error code {ret}', expected=False)
+                    error=JsChallengeProviderError(f'{jsx} returned error code {ret}', expected=False)
                 )
                 
             challenge_response = json.loads(stdout)
