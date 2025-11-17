@@ -42,7 +42,7 @@ class YoutubeiJCP(JsChallengeProvider):
                 test_cmd = subprocess.run([jsx, '-v'], capture_output=True)
                 test_cmd.check_returncode()
                 jsx_selected = jsx
-                jsx_version = test_cmd.stdout.decode()
+                jsx_version = test_cmd.stdout.decode().strip()
                 self.logger.info(f'Using runtime: {jsx} {jsx_version}')
                 return [ jsx_selected, jsx_version ]
             except Exception as err:
@@ -119,10 +119,24 @@ class YoutubeiJCP(JsChallengeProvider):
                     'deno': [ 'deno', '--allow-net', '--allow-read' ],
                     'node': [ 'node' ],
                     'bun': [ 'bun' ],
+                    'node_old': [ 'npx', '--yes', 'tsx' ],
                     }
+            if jsx is 'node':
+                major_ver_re = re.compile(r'v(\d+)?\.')
+                major_ver_search = re.search(major_ver_re, self.JSX_VERSION)
+                if major_ver_search:
+                    major_ver = major_ver_search.group(1)
+                if int(major_ver) < 22:
+                    self.logger.info(f'Old node version is detected {self.JSX_VERSION} is less than 22')
+                    actual_jsx = 'node_old'
+                else:
+                    actual_jsx = 'node'
+            else:
+                actual_jsx = jsx
+
             curdir = os.getcwd()
             os.chdir(self.js_cachedir)
-            result = subprocess.run([*jsx_cmd[jsx], 'yt_js_extract.ts', player_id], capture_output=True)
+            result = subprocess.run([*jsx_cmd[actual_jsx], 'yt_js_extract.ts', player_id], capture_output=True)
             os.chdir(curdir)
             try:
                 result.check_returncode()
