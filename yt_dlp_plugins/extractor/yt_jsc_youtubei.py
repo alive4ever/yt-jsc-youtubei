@@ -71,14 +71,20 @@ class YoutubeiJCP(JsChallengeProvider):
 
     def _check_js_extract_script(self):
         required_files = [ 'yt_js_extract.ts', 'package.json', 'package-lock.json' ]
-        base_url = 'https://raw.githubusercontent.com/alive4ever/yt-js-extractor/main/'
+        resource_base_dir = os.path.join(os.path.dirname(__file__), 'yt_jsc_youtubei_res')
         for filename in required_files:
             if os.path.isfile(os.path.join(self.js_cachedir, filename)):
                 pass
             else:
-                full_url = f'{base_url}{filename}'
-                content = self.ie._download_webpage(full_url, None, note=f'Downloading {filename} to cache')
+                content = ''
+                try:
+                    with open(os.path.join(resource_base_dir, filename), 'r') as file:
+                        content = file.read()
+                except Exception as err:
+                    self.logger.error(f'Unable to open resource {filename} from this plugin')
+                    pass
                 if content:
+                    self.logger.debug(f'Got {filename} from resources: { len(content) }')
                     with open(os.path.join(self.js_cachedir, filename), 'w') as file:
                         file.write(content)
                 else:
@@ -235,14 +241,14 @@ class YoutubeiJCP(JsChallengeProvider):
                     request=request, 
                     response=JsChallengeResponse(
                         type=JsChallengeType.N,
-                        output=NChallengeOutput(results=challenge_response['responses'][0]['data']),
+                        output=NChallengeOutput(results=traverse_obj(challenge_response, ('responses', 0, 'data'), default={}, expected_type=dict)),
                 ))
             else:
                 yield JsChallengeProviderResponse(
                     request=request,
                     response=JsChallengeResponse(
                         type=JsChallengeType.SIG,
-                        output=SigChallengeOutput(results=challenge_response['responses'][1]['data']),
+                        output=SigChallengeOutput(results=traverse_obj(challenge_response, ('responses', 1, 'data'), default={}, expected_type=dict)),
                 ))
         
 
