@@ -1,0 +1,3 @@
+[submodule "yt_dlp_plugins/extractor/yt_jsc_youtubei_res"]
+	path = yt_dlp_plugins/extractor/yt_jsc_youtubei_res
+	url = https://github.com/alive4ever/yt-js-extractor
