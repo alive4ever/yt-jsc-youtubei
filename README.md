@@ -11,6 +11,8 @@ Clone the repo and perform `pip install .` at the repo top dir.
 ```sh
 git clone https://github.com/alive4ever/yt-jsc-youtubei
 cd yt-jsc-youtubei
+git submodule init
+git submodule update
 pip install .
 ```
 
