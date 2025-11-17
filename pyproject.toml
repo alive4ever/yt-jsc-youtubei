@@ -1,6 +1,6 @@
 [project]
 name = "yt-jsc-youtubei"
-version = "0.0.1"
+version = "0.0.2"
 description = "Js Challenge Provider based on youtubei.js"
 license = "MIT"
 readme = "README.md"
@@ -22,5 +22,11 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 packages = [
- { include = "yt_dlp_plugins/extractor/yt_jsc_youtubei.py" }
+ { include = "yt_dlp_plugins/extractor/yt_jsc_youtubei.py" },
+]
+include = [
+ { path = "yt_dlp_plugins/extractor/yt_jsc_youtubei_res/*", format = ["sdist", "wheel"] }
+]
+exclude = [
+ { path = "*/.git", format = ["sdist", "wheel"] }
 ]
