@@ -121,7 +121,7 @@ class YoutubeiJCP(JsChallengeProvider):
                     'bun': [ 'bun' ],
                     'node_old': [ 'npx', '--yes', 'tsx' ],
                     }
-            if jsx is 'node':
+            if jsx == 'node':
                 major_ver_re = re.compile(r'v(\d+)?\.')
                 major_ver_search = re.search(major_ver_re, self.JSX_VERSION)
                 if major_ver_search:
