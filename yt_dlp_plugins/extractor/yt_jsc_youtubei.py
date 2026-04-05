@@ -20,7 +20,7 @@ import typing
 
 @register_provider
 class YoutubeiJCP(JsChallengeProvider):
-    PROVIDER_VERSION = '0.0.2'
+    PROVIDER_VERSION = '0.0.3'
     PROVIDER_NAME = 'yt-jsc-youtubei-provider'
     BUG_REPORT_LOCATION = 'https://github.com/alive4ever/yt-jsc-youtubei'
     
@@ -220,7 +220,8 @@ class YoutubeiJCP(JsChallengeProvider):
             const n_challenge = {json.dumps(challenges)};
             const n_result = {{}};
             for (const n of n_challenge) {{
-              n_result[n] = exportedVars.nFunction(n);
+              const func_result = process(n, '', '');
+              n_result[n] = func_result['n'];
             }}
             '''.strip()
             elif env is JsChallengeType.SIG:
@@ -228,7 +229,8 @@ class YoutubeiJCP(JsChallengeProvider):
             const sig_challenge = {json.dumps(challenges)};
             const sig_result = {{}};
             for (const sig of sig_challenge) {{
-              sig_result[sig] = exportedVars.sigFunction(sig);
+              const func_result = process('', 'sig', encodeURIComponent(sig));
+              sig_result[sig] = func_result['sig'];
             }}
              '''.strip()
             else:
