@@ -1,6 +1,6 @@
 [project]
 name = "yt-jsc-youtubei"
-version = "0.0.2"
+version = "0.0.3"
 description = "Js Challenge Provider based on youtubei.js"
 license = "MIT"
 readme = "README.md"
