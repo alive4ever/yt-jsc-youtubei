@@ -177,8 +177,9 @@ class YoutubeiJCP(JsChallengeProvider):
         self._resolve_js_deps(jsx)
         self.logger.debug(f'Got {len(requests)} challenges to solve.')
         for item in requests:
-            if len(item.input.challenges[0]) >= 255:
-                raise JsChallengeProviderRejectedRequest('Challenges longer than 255 is not supported', expected=True)
+            if item.input.challenges:
+                if len(item.input.challenges[0]) >= 255:
+                    raise JsChallengeProviderRejectedRequest('Challenges longer than 255 is not supported', expected=True)
 
         player_id = ''
         for request in requests:
@@ -196,8 +197,11 @@ class YoutubeiJCP(JsChallengeProvider):
             self._check_extracted_js_code(jsx, player_id)
             js_code = self._load_extracted_js_code(player_id)
             challenges = []
-            for line in request.input.challenges:
-                challenges.append(line.strip())
+            if request.input.challenges:
+                for line in request.input.challenges:
+                    challenges.append(line.strip())
+            else:
+                self.logger.info(f'No challenges to solve for {env}')
             head_code = '''
             let result = {};
             '''
