@@ -69,75 +69,23 @@ class YoutubeiJCP(JsChallengeProvider):
             self.logger.debug('Creating cache directory')
             return False
 
-    def _check_js_extract_script(self):
-        required_files = [ 'yt_js_extract.ts', 'package.json', 'package-lock.json' ]
+    def _get_js_extract_script(self):
+        script_file = 'yt_js_extract.js'
         resource_base_dir = os.path.join(os.path.dirname(__file__), 'yt_jsc_youtubei_res')
-        for filename in required_files:
-            if os.path.isfile(os.path.join(self.js_cachedir, filename)):
-                pass
-            else:
-                content = ''
-                try:
-                    with open(os.path.join(resource_base_dir, filename), 'r') as file:
-                        content = file.read()
-                except Exception as err:
-                    self.logger.error(f'Unable to open resource {filename} from this plugin')
-                    pass
-                if content:
-                    self.logger.debug(f'Got {filename} from resources: { len(content) }')
-                    with open(os.path.join(self.js_cachedir, filename), 'w') as file:
-                        file.write(content)
-                else:
-                    raise JsChallengeProviderError(f'Unable to download {filename}')
-
-    def _resolve_js_deps(self, jsx):
-        if os.path.isdir(os.path.join(self.js_cachedir, 'node_modules')):
-            return True
+        js_extract_script = os.path.join(resource_base_dir, script_file)
+        if os.path.isfile(js_extract_script):
+            return js_extract_script
         else:
-            install_cmd = {
-                    'deno': 'deno',
-                    'node': 'npm',
-                    'bun': 'bun',
-                    }
-            curdir = os.getcwd()
-            os.chdir(self.js_cachedir)
-            self.logger.info(f'Installing js packages using {install_cmd[self.JSX_SELECTED]}')
-            result = subprocess.run([install_cmd[jsx], 'install'])
-            os.chdir(curdir)
-            try:
-                result.check_returncode()
-            except Exception as err:
-                raise JsChallengeProviderError('Failure installing js packages')
-            return True
+            raise JsChallengeProviderError(f'Unable to extract YT js challenge code because {script_file} is missing.')
 
     def _check_extracted_js_code(self, jsx, player_id):
+        js_extract_script = self._get_js_extract_script()
         js_code_cache = os.path.join(self.js_cachedir, f'extracted_sigcode_{player_id}.js')
         if os.path.isfile(js_code_cache):
             return True
         else:
-            jsx_cmd = {
-                    'deno': [ 'deno', '--allow-net', '--allow-read' ],
-                    'node': [ 'node' ],
-                    'bun': [ 'bun' ],
-                    'node_old': [ 'npx', '--yes', 'tsx' ],
-                    }
-            if jsx == 'node':
-                major_ver_re = re.compile(r'v(\d+)?\.')
-                major_ver_search = re.search(major_ver_re, self.JSX_VERSION)
-                if major_ver_search:
-                    major_ver = major_ver_search.group(1)
-                if int(major_ver) < 22:
-                    self.logger.info(f'Old node version is detected {self.JSX_VERSION} is less than 22')
-                    actual_jsx = 'node_old'
-                else:
-                    actual_jsx = 'node'
-            else:
-                actual_jsx = jsx
-
-            curdir = os.getcwd()
-            os.chdir(self.js_cachedir)
-            result = subprocess.run([*jsx_cmd[actual_jsx], 'yt_js_extract.ts', player_id], capture_output=True)
-            os.chdir(curdir)
+            self.logger.info(f'Extracting YT js challenge for {player_id}...')
+            result = subprocess.run([jsx, js_extract_script, player_id], capture_output=True)
             try:
                 result.check_returncode()
             except Exception as err:
@@ -173,8 +121,6 @@ class YoutubeiJCP(JsChallengeProvider):
             raise JsChallengeProviderError('No JS runtime is found.')
         self.logger.info(f'Using {jsx} {jsx_version} to solve YT challenges')
         self._check_js_cachedir()
-        self._check_js_extract_script()
-        self._resolve_js_deps(jsx)
         self.logger.debug(f'Got {len(requests)} challenges to solve.')
         for item in requests:
             if item.input.challenges:
