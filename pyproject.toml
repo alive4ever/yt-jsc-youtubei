@@ -1,6 +1,6 @@
 [project]
 name = "yt-jsc-youtubei"
-version = "0.0.3"
+version = "0.0.4"
 description = "Js Challenge Provider based on youtubei.js"
 license = "MIT"
 readme = "README.md"
@@ -17,16 +17,7 @@ homepage = "https://github.com/alive4ever/yt-jsc-youtubei"
 repository = "https://github.com/alive4ever/yt-jsc-youtubei"
 documentation = "https://github.com/alive4ever/yt-jsc-youtubei"
 "Bug tracker" = "https://github.com/alive4ever/yt-jsc-youtubei/issues"
+
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-[tool.poetry]
-packages = [
- { include = "yt_dlp_plugins/extractor/yt_jsc_youtubei.py" },
-]
-include = [
- { path = "yt_dlp_plugins/extractor/yt_jsc_youtubei_res/*", format = ["sdist", "wheel"] }
-]
-exclude = [
- { path = "*/.git", format = ["sdist", "wheel"] }
-]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
