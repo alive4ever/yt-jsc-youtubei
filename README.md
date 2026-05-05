@@ -8,6 +8,8 @@ A `yt-dlp` plugin that uses `youtubei.js` to extract and solve `JsChallenge` for
 
 Clone the repo and perform `pip install .` at the repo top dir.
 
+Make sure that one of js runtimes (`[ deno, node, bun ]`) is available if installing the package from source.
+
 ```sh
 git clone https://github.com/alive4ever/yt-jsc-youtubei
 cd yt-jsc-youtubei
