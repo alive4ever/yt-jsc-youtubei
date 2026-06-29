@@ -34,7 +34,7 @@ class build_py(_build_py):
             raise SystemExit("No js runtime is found. Supported runtimes: [ deno, node, bun ].")
         install_cmd = {
                 'deno': ['deno', 'install'],
-                'node': ['npm', 'install', '--no-save' ],
+                'node': ['npm', 'install', '--ignore-scripts', '--no-save' ],
                 'bun': ['bun', 'install', '--no-save'],
                 }
         exec_cmd = {
