@@ -20,7 +20,7 @@ import typing
 
 @register_provider
 class YoutubeiJCP(JsChallengeProvider):
-    PROVIDER_VERSION = '0.0.3'
+    PROVIDER_VERSION = '0.0.5'
     PROVIDER_NAME = 'yt-jsc-youtubei-provider'
     BUG_REPORT_LOCATION = 'https://github.com/alive4ever/yt-jsc-youtubei'
     
