@@ -70,7 +70,7 @@ class build_py(_build_py):
 
 setup(
     name="yt-jsc-youtubei",
-    version="0.0.4",
+    version="0.0.5",
     packages=["yt_dlp_plugins.extractor", "yt_dlp_plugins.extractor.yt_jsc_youtubei_res"],
     include_package_data=True,
     package_data={"yt_dlp_plugins.extractor": ["yt_jsc_youtubei_res/*"]},
