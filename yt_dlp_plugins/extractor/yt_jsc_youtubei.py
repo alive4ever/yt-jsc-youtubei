@@ -85,7 +85,12 @@ class YoutubeiJCP(JsChallengeProvider):
             return True
         else:
             self.logger.info(f'Extracting YT js challenge for {player_id}...')
-            result = subprocess.run([jsx, js_extract_script, player_id], capture_output=True)
+            jsx_cmd = {
+                    'deno': [ 'deno', '--allow-net' ],
+                    'node': [ 'node' ],
+                    'bun': [ 'bun' ],
+                    }
+            result = subprocess.run([*jsx_cmd[jsx], js_extract_script, player_id], capture_output=True)
             try:
                 result.check_returncode()
             except Exception as err:
