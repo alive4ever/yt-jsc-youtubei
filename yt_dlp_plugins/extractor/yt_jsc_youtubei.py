@@ -20,7 +20,7 @@ import typing
 
 @register_provider
 class YoutubeiJCP(JsChallengeProvider):
-    PROVIDER_VERSION = '0.0.5'
+    PROVIDER_VERSION = '0.0.6'
     PROVIDER_NAME = 'yt-jsc-youtubei-provider'
     BUG_REPORT_LOCATION = 'https://github.com/alive4ever/yt-jsc-youtubei'
     
@@ -175,7 +175,7 @@ class YoutubeiJCP(JsChallengeProvider):
             const n_challenge = {json.dumps(challenges)};
             const n_result = {{}};
             for (const n of n_challenge) {{
-              const func_result = process(n, '', '');
+              const func_result = decrypt_signatures(n, '', '');
               n_result[n] = func_result['n'];
             }}
             '''.strip()
@@ -184,7 +184,7 @@ class YoutubeiJCP(JsChallengeProvider):
             const sig_challenge = {json.dumps(challenges)};
             const sig_result = {{}};
             for (const sig of sig_challenge) {{
-              const func_result = process('', 'sig', encodeURIComponent(sig));
+              const func_result = decrypt_signatures('', 'sig', encodeURIComponent(sig));
               sig_result[sig] = func_result['sig'];
             }}
              '''.strip()
